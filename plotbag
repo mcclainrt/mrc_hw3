@@ -1,0 +1,33 @@
+% 
+% Use MATLAB to generate three figures based on the recorded data from Exercise 3:
+% 
+%     A plot the X and Y location of your turtle. Save this file as matlab/pose_xy.png
+%     A plot of the heading angle (Theta) of your turtle as a function of time. Save this file as matlab/pose_theta.png
+%     A quiver plot showing the location and heading of the turtle.  Save this file as matlab/pose_quiver.png
+% 
+% Following the Working with rosbag Log Files example, develop a script called plotbag.m and put it in a directory of your package called matlab.  Your script will need to do the following...
+% 
+%     Load the myturtle.bag file
+%     Select the messages on the turtle1/pose topic
+%     Convert these pose messages to a timeseries
+%     Generate the figures.  (Make sure to include labels and titles for your figures.)
+
+% Create a bag file object with the file name
+% by omitting the semicolon this displays some information about
+% the bag file
+bag = rosbag('../data/myturtle.bag')
+ 
+% Display a list of the topics and message types in the bag file
+bag.AvailableTopics
+ 
+% Since the messages on topic turtle1/pose are of type Twist,
+% let's see some of the attributes of the Twist message
+msg_pose = rosmessage('turtlesim/Pose')
+showdetails(msg_pose)
+ 
+% Get just the topic we are interested in
+bagselect = select(bag,'Topic','turtle1/pose');
+ 
+% Create a time series object based on the fields of the turtlesim/Pose
+% message we are interested in
+ts = timeseries(bagselect,'X','Y','Theta','LinearVelocity','AngularVelocity');
